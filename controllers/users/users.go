@@ -79,3 +79,17 @@ func (u *UserController) Logout() {
 	u.DelSession("user_id")
 	u.MsgBack("退出成功!", 1)
 }
+
+//删除书架图书
+func (u *UserController) DelBook() {
+	user_id := u.Data["user_id"].(int)
+	domain := u.GetString("domain")
+	_, err := u.o.QueryTable(new(models.Bookshelf).TableName()).
+		Filter("user_id", user_id).
+		Filter("domain", domain).
+		Delete()
+	if err != nil {
+		u.MsgBack("删除失败", 0)
+	}
+	u.MsgBack("删除成功", 1)
+}

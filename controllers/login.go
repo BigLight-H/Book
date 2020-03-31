@@ -62,7 +62,7 @@ func (p *LoginController) Login() {
 	}
 }
 
-//验证用户名
+//验证用户名是否存在
 func (p *LoginController) checkUserName(name string) bool {
 	num,err := p.o.QueryTable(new(models.Users).TableName()).Filter("name", name).Count()
 	if err ==nil {
@@ -73,7 +73,7 @@ func (p *LoginController) checkUserName(name string) bool {
 	return false
 }
 
-//验证邮箱
+//验证邮箱是否存在
 func (p *LoginController) checkEmail(email string) bool {
 	num,err := p.o.QueryTable(new(models.Users).TableName()).Filter("email", email).Count()
 	if err ==nil {
