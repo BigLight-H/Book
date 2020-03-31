@@ -57,14 +57,9 @@ func (p *LoginController) Login() {
 		p.MsgBack("登录失败!", 0)
 	} else {
 		p.SetSession("user", user[0])
+		p.SetSession("user_id", user[0].Id)
 		p.MsgBack("登陆成功!", 1)
 	}
-}
-
-//退出
-func (p *LoginController) Logout() {
-	p.DelSession("user")
-	p.MsgBack("退出成功!", 1)
 }
 
 //验证用户名

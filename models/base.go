@@ -22,6 +22,7 @@ func Init() {
 		new(Content),
 		new(Hub),
 		new(Users),
+		new(Bookshelf),
 	)
 }
 
