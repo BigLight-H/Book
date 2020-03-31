@@ -21,6 +21,7 @@ func Init() {
 		new(Lists),
 		new(Content),
 		new(Hub),
+		new(Users),
 	)
 }
 
