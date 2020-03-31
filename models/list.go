@@ -5,6 +5,7 @@ type Lists struct {
 	Root    string
 	Link    string
 	Name    string
+	Domain  string
 }
 
 func (m *Lists) TableName() string {

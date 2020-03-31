@@ -9,6 +9,7 @@ type Content struct {
 	SPage    string
 	XPage    string
 	List     string
+	Domain   string
 }
 
 func (m *Content) TableName() string {

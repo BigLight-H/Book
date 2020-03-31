@@ -19,7 +19,7 @@ func (c *MainController) Get() {
 //搜索首页
 func (p *MainController) Home() {
 	s := p.GetString(":name")
-	info := service.MergeMap(s)
+	info := service.GetBook(s)
 	p.Data["json"] = util.ReturnJson("首页数据", 200, info)
 	p.ServeJSON()
 }
