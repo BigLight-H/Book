@@ -8,8 +8,11 @@ import (
 
 func init() {
     beego.Router("/", &controllers.MainController{})
+    //搜索图书
 	beego.Router("/home/:name", &controllers.MainController{},"get:Home")
+    //获取图书目录列表
 	beego.Router("/book/list", &controllers.MainController{},"get:List")
+    //获取图书内容详情
 	beego.Router("/book/detail", &controllers.MainController{},"get:Detail")
 
     //登录/注册
