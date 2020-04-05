@@ -39,7 +39,8 @@ func BookContent(con models.Content, links string) []map[string]string {
 	info := []map[string]string{}
 	c.OnXML(con.Root, func(e *colly.XMLElement) {
 		name := e.ChildText(con.Name)
-		content := e.ChildText(con.Content)
+		var ele  = NewXMLElement(e)
+		content := ele.ChildHtml(con.Content)
 		s_page := ""
 		x_page := ""
 		list := ""
@@ -58,6 +59,23 @@ func BookContent(con models.Content, links string) []map[string]string {
 		info = append(
 			info,
 			map[string]string{"name": name, "content": content, "s_page": s_page, "x_page": x_page, "list": list})
+	})
+	c.Visit(links)
+	return info
+}
+//书图片,简介
+func BookSynosis(con models.Synopsis, links string) []map[string]string  {
+	c := colly.NewCollector()
+	info := []map[string]string{}
+	c.OnXML(con.Root, func(e *colly.XMLElement) {
+		name := e.ChildText(con.Name)
+		writer := e.ChildText(con.Writer)
+		img := e.ChildText(con.Img)
+		synopsis := e.ChildText(con.Synopsis)
+		renew_time := e.ChildText(con.RenewTime)
+		info = append(
+			info,
+			map[string]string{"name": name, "writer": writer, "img": img, "synopsis": synopsis, "renew_time": renew_time})
 	})
 	c.Visit(links)
 	return info

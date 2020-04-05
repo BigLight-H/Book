@@ -5,7 +5,7 @@ type Content struct {
 	Id       int
 	Name     string
 	Root     string
-	Content  string
+	Content  string `html:"Html"`
 	SPage    string
 	XPage    string
 	List     string

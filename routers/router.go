@@ -14,6 +14,8 @@ func init() {
 	beego.Router("/book/list", &controllers.MainController{},"get:List")
     //获取图书内容详情
 	beego.Router("/book/detail", &controllers.MainController{},"get:Detail")
+    //文章目录介绍部分
+	beego.Router("/book/synopsis", &controllers.MainController{},"get:Synopsis")
 
     //登录/注册
 	beego.Router("/register", &controllers.LoginController{},"post:Register")

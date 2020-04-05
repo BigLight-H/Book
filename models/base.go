@@ -23,6 +23,7 @@ func Init() {
 		new(Hub),
 		new(Users),
 		new(Bookshelf),
+		new(Synopsis),
 	)
 }
 

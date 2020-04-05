@@ -8,6 +8,11 @@ type Hub struct {
 	Name      string
 	Author    string
 	Suffix    string
+	NewList   string
+	NewListLink   string
+	RenewTime     string
+	Status    string
+	Image     string
 	Mark      string
 }
 

@@ -17,10 +17,27 @@ func ReturnJson(msg string, code int, src []map[string]string) map[string]interf
 }
 
 //返回搜索数据map
-func BackInfoMap(info []map[string]string, link string, name string, uname string, id string) []map[string]string {
+//func BackInfoMap(info []map[string]string, link string, name string, uname string, id string) []map[string]string {
+//	info = append(
+//		info,
+//		map[string]string{"link": link, "name": name, "uname": uname, "id": id})
+//	return info
+//}
+
+func BackInfoMap(info []map[string]string, str ...string) []map[string]string {
 	info = append(
 		info,
-		map[string]string{"link": link, "name": name, "uname": uname, "id": id})
+		map[string]string{
+			"link": str[0],
+			"name": str[1],
+			"uname": str[2],
+			"id": str[3],
+			"new_list":str[4],
+			"new_list_link":str[5],
+			"renew_time":str[6],
+			"status":str[7],
+			"img":str[8],
+		})
 	return info
 }
 

@@ -1,9 +1,9 @@
 package controllers
 
 import (
+	"fiction_web/models"
 	"fiction_web/service"
 	"fiction_web/util"
-	"fiction_web/models"
 )
 
 type MainController struct {
@@ -44,6 +44,17 @@ func (p *MainController) Detail() {
 	p.o.Read(&con)
 	info := service.BookContent(con, links)
 	p.Data["json"] = util.ReturnJson("详情内容页", 200, info)
+	p.ServeJSON()
+}
+
+//书简介
+func (p *MainController) Synopsis() {
+	links := p.GetString("link")
+	id := util.StrToInt(p.GetString("id"))
+	con := models.Synopsis{Id:id}
+	p.o.Read(&con)
+	info := service.BookSynosis(con, links)
+	p.Data["json"] = util.ReturnJson("文章目录介绍部分", 200, info)
 	p.ServeJSON()
 }
 
