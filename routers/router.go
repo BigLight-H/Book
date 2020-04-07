@@ -27,7 +27,7 @@ func init() {
     //添加到书架
 	beego.Router("/user/add/books", &users.UserController{},"post:AddBookshelf")
     //查看书本是否已经存在书架
-	beego.Router("/user/verification/books", &users.UserController{},"get:VerificationBook")
+	beego.Router("/user/verification/books", &users.UserController{},"get:VerificationBooks")
 	//更新图书阅读进度
 	beego.Router("/user/books/update", &users.UserController{},"post:UpdateBookSchedule")
 	//删除图书

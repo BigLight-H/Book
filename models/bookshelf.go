@@ -9,6 +9,7 @@ type Bookshelf struct {
 	Domain    string
 	BookName  string
 	Author    string
+	RenewTime string
 }
 
 func (m *Bookshelf) TableName() string {

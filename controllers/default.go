@@ -58,4 +58,28 @@ func (p *MainController) Synopsis() {
 	p.ServeJSON()
 }
 
+//加入书签
+func (p *MainController) AddBookshelf() {
+	book_name := p.GetString("book_name")
+	author := p.GetString("author")
+	user_id := 1
+	//hub_id := p.GetString("hub_id")
+	hub_id := 1
+	link := p.GetString("link")
+	domain := p.GetString("domain")
+	img := p.GetString("img")
+	renew_time := p.GetString("renew_time")
+	book := models.Bookshelf{}
+	book.UserId = user_id
+	book.BookName = book_name
+	book.Author = author
+	book.HubId = hub_id
+	book.Link = link
+	book.Domain = domain
+	book.Img = img
+	book.RenewTime = renew_time
+	p.o.Insert(&book)
+	p.MsgBack("添加书签成功", 1)
+}
+
 

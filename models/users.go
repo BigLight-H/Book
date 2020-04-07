@@ -4,7 +4,7 @@ type Users struct {
 	Id      int
 	Name    string
 	Pwd     string
-	Mobile  string
+	mobile  string
 	Email   string
 }
 

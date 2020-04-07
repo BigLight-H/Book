@@ -14,11 +14,6 @@ func (p *LoginController) Register() {
 	name := p.GetString("name")
 	email := p.GetString("email")
 	pwd := p.GetString("pwd")
-	pwd1 := p.GetString("pwd1")
-	if pwd != pwd1 {
-		p.MsgBack("密码不一致!", 0)
-		panic("go back!")
-	}
 	if util.VerifyEmailFormat(email)  != true {
 		p.MsgBack("邮箱格式不正确!", 0)
 		panic("go back!")
@@ -56,9 +51,8 @@ func (p *LoginController) Login() {
 	if err != nil {
 		p.MsgBack("登录失败!", 0)
 	} else {
-		p.SetSession("user", user[0])
-		p.SetSession("user_id", user[0].Id)
-		p.MsgBack("登陆成功!", 1)
+		token := util.GenerateToken(86400, user[0].Id, user[0].Name)//token有效期时长一天
+		p.MsgBack(token, 1)
 	}
 }
 

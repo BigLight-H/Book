@@ -3,6 +3,7 @@ package main
 import (
 	"fiction_web/models"
 	_ "fiction_web/routers"
+	"fiction_web/util"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/plugins/cors"
@@ -15,6 +16,7 @@ func init()  {
 }
 
 func main() {
+	util.InitLogs()
 	//InsertFilter是提供一个过滤函数
 	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
 		//允许访问所有源
