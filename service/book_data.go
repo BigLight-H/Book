@@ -80,3 +80,15 @@ func BookSynosis(con models.Synopsis, links string) []map[string]string  {
 	c.Visit(links)
 	return info
 }
+
+//检测书本是否更新
+func BookSynosisCheck(con models.Synopsis, links string) string  {
+	c := colly.NewCollector()
+	info := ""
+	c.OnXML(con.Root, func(e *colly.XMLElement) {
+		renew_time := e.ChildText(con.RenewTime)
+		info = renew_time
+	})
+	c.Visit(links)
+	return info
+}

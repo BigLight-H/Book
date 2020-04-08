@@ -3,8 +3,11 @@ package users
 import (
 	"fiction_web/controllers"
 	"fiction_web/models"
+	"fiction_web/service"
 	"fiction_web/util"
 	"github.com/astaxie/beego/orm"
+	"github.com/davecgh/go-spew/spew"
+	"strconv"
 	"strings"
 )
 
@@ -13,7 +16,7 @@ type UserController struct {
 }
 
 type bookshelf struct {
-	Id    int         `form:"-"`
+	Id        int     `form:"-"`
 	HubId     int     `form:"id"`
 	Link      string  `form:"link"`
 	Img       string  `form:"img"`
@@ -58,7 +61,24 @@ func (u *UserController) GetBookshelf() {
 	user_id := util.GetTokenUserId(token[1])
 	book := []models.Bookshelf{}
 	o.QueryTable(new(models.Bookshelf).TableName()).Filter("user_id", user_id).All(&book)
-	u.Data["json"] = book
+	info := []map[string]string{}
+	for _, value := range book{
+		status := u.CheckNews(value.HubId, value.Domain, value.RenewTime)
+		info = append(
+			info,
+			map[string]string{
+				"UserId": strconv.Itoa(value.UserId),
+				"HubId": strconv.Itoa(value.HubId),
+				"Link": value.Link,
+				"Img": value.Img,
+				"Domain": value.Domain,
+				"BookName": value.BookName,
+				"Author": value.Author,
+				"RenewTime": value.RenewTime,
+				"Status":strconv.Itoa(status),
+			})
+	}
+	u.Data["json"] = info
 	u.ServeJSON()
 }
 
@@ -129,4 +149,14 @@ func (u *UserController) DelBook() {
 		u.MsgBack("删除失败", 0)
 	}
 	u.MsgBack("删除成功", 1)
+}
+
+//检测书本是否有更新
+func (u *UserController) CheckNews(hubId int, link string, renewTime string) int {
+	o := orm.NewOrm()
+	con := models.Synopsis{Id:hubId}
+	o.Read(&con)
+	str := service.BookSynosisCheck(con, link)
+	spew.Dump(renewTime, str)
+	return strings.Compare(renewTime, str)
 }
