@@ -54,7 +54,8 @@ func (u *UserController) AddBookshelf() {
 //查看书架
 func (u *UserController) GetBookshelf() {
 	o := orm.NewOrm()
-	user_id := u.Data["user_id"].(int)
+	token := strings.Fields(u.Ctx.Input.Header("Authorization"))//获取token
+	user_id := util.GetTokenUserId(token[1])
 	book := []models.Bookshelf{}
 	o.QueryTable(new(models.Bookshelf).TableName()).Filter("user_id", user_id).All(&book)
 	u.Data["json"] = book
@@ -69,6 +70,7 @@ func (u *UserController) VerificationBook(id int, domain string) {
 		Count()
 	if num > 0 {
 		u.MsgBack("书本已存在", 0)
+		panic("书本已存在")
 	}
 }
 
@@ -90,8 +92,9 @@ func (u *UserController) VerificationBooks() {
 
 //更新图书阅读进度
 func (u *UserController) UpdateBookSchedule() {
+	token := strings.Fields(u.Ctx.Input.Header("Authorization"))//获取token
 	o := orm.NewOrm()
-	user_id := u.Data["user_id"].(int)
+	user_id := util.GetTokenUserId(token[1])
 	domain := u.GetString("domain")
 	link := u.GetString("link")
 	_, err := o.QueryTable(new(models.Bookshelf).TableName()).

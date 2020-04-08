@@ -30,7 +30,8 @@ func (p *BaseController) Prepare()  {
 		token := strings.Fields(p.Ctx.Input.Header("Authorization"))
 		err := util.ValidateToken(token[1])
 		if err != nil {
-			p.MsgBack("token已过期,请重新登录!", -1)
+			p.MsgBack("token不存在,请重新登录!", -1)
+			panic("token不存在,请重新登录!")
 		}
 	}
 }
