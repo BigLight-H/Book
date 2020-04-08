@@ -30,8 +30,8 @@ func init() {
 	beego.Router("/user/verification/books", &users.UserController{},"get:VerificationBooks")
 	//更新图书阅读进度
 	beego.Router("/user/books/update", &users.UserController{},"post:UpdateBookSchedule")
+	//更新图书最新章节tag
+	beego.Router("/user/books/renew/time", &users.UserController{},"post:ChangeRenewTime")
 	//删除图书
 	beego.Router("/user/books/del", &users.UserController{},"post:DelBook")
-    //退出登录
-	beego.Router("/user/Logout", &users.UserController{},"get:Logout")
 }

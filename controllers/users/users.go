@@ -63,7 +63,7 @@ func (u *UserController) GetBookshelf() {
 	o.QueryTable(new(models.Bookshelf).TableName()).Filter("user_id", user_id).All(&book)
 	info := []map[string]string{}
 	for _, value := range book{
-		status := u.CheckNews(value.HubId, value.Domain, value.RenewTime)
+		new_renew := u.CheckNews(value.HubId, value.Domain, value.RenewTime)
 		info = append(
 			info,
 			map[string]string{
@@ -75,7 +75,8 @@ func (u *UserController) GetBookshelf() {
 				"BookName": value.BookName,
 				"Author": value.Author,
 				"RenewTime": value.RenewTime,
-				"Status":strconv.Itoa(status),
+				"Status":new_renew["status"],
+				"NewRenew":new_renew["new_renew_time"],
 			})
 	}
 	u.Data["json"] = info
@@ -129,17 +130,11 @@ func (u *UserController) UpdateBookSchedule() {
 	u.MsgBack("更新阅读进度成功", 1)
 }
 
-//退出登录
-func (u *UserController) Logout() {
-	u.DelSession("user")
-	u.DelSession("user_id")
-	u.MsgBack("退出成功!", 1)
-}
-
 //删除书架图书
 func (u *UserController) DelBook() {
+	token := strings.Fields(u.Ctx.Input.Header("Authorization"))//获取token
 	o := orm.NewOrm()
-	user_id := u.Data["user_id"].(int)
+	user_id := util.GetTokenUserId(token[1])
 	domain := u.GetString("domain")
 	_, err := o.QueryTable(new(models.Bookshelf).TableName()).
 		Filter("user_id", user_id).
@@ -152,11 +147,33 @@ func (u *UserController) DelBook() {
 }
 
 //检测书本是否有更新
-func (u *UserController) CheckNews(hubId int, link string, renewTime string) int {
+func (u *UserController) CheckNews(hubId int, link string, renewTime string) map[string]string {
 	o := orm.NewOrm()
 	con := models.Synopsis{Id:hubId}
 	o.Read(&con)
 	str := service.BookSynosisCheck(con, link)
 	spew.Dump(renewTime, str)
-	return strings.Compare(renewTime, str)
+	info := map[string]string{}
+	info["status"] = strconv.Itoa(strings.Compare(renewTime, str))
+	info["new_renew_time"] = str
+	return info
+}
+
+//更新最新章节tag
+func (u *UserController) ChangeRenewTime()  {
+	token := strings.Fields(u.Ctx.Input.Header("Authorization"))//获取token
+	o := orm.NewOrm()
+	user_id := util.GetTokenUserId(token[1])
+	domain := u.GetString("domain")
+	new_renew := u.GetString("new_renew")
+	_, err := o.QueryTable(new(models.Bookshelf).TableName()).
+		Filter("user_id", user_id).
+		Filter("domain", domain).
+		Update(orm.Params{
+			"renew_time": new_renew,
+		})
+	if err != nil {
+		u.MsgBack("更新最新章节tag失败", 0)
+	}
+	u.MsgBack("更新最新章节tag成功", 1)
 }
