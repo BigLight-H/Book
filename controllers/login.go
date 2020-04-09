@@ -1,12 +1,23 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fiction_web/models"
 	"fiction_web/util"
+	"github.com/astaxie/beego"
+	"github.com/davecgh/go-spew/spew"
+	"io/ioutil"
+	"net/http"
 )
 
 type LoginController struct {
 	BaseController
+}
+
+type TenXunRequest struct {
+	Response     string     `json:"response"`
+	Evil_level   string     `json:"evil_level"`
+	Err_msg      string     `json:"err_msg"`
 }
 
 //注册
@@ -41,7 +52,16 @@ func (p *LoginController) Register() {
 //登录
 func (p *LoginController) Login() {
 	name := p.GetString("name")
+	ticket := p.GetString("ticket")
+	randstr := p.GetString("randstr")
+	userIp := util.RemoteIp(p.Ctx.Request)
 	pwd := util.Md5(p.GetString("pwd"))
+	v := p.httpGet(ticket, randstr, userIp)
+	spew.Dump(v)
+	if v < 1 {
+		p.MsgBack("验证码验证失败4	", 0)
+		panic("验证码验证失败")
+	}
 	if name == "" {
 		p.MsgBack("用户名不能为空!", 0)
 		panic("用户名不能为空!")
@@ -54,6 +74,23 @@ func (p *LoginController) Login() {
 		token := util.GenerateToken(86400, user[0].Id, user[0].Name)//token有效期时长一天
 		p.MsgBack(token, 1)
 	}
+}
+//腾旭防水墙验证
+func (p *LoginController) httpGet(Ticket string, Randstr string, UserIP string) int {
+	resp, err := http.Get("https://ssl.captcha.qq.com/ticket/verify?aid="+beego.AppConfig.String("aid")+"&AppSecretKey="+beego.AppConfig.String("AppSecretKey")+"&Ticket="+Ticket+"&Randstr="+Randstr+"&UserIP="+UserIP)
+	if err != nil {
+		p.MsgBack("验证码验证失败1", 0)
+		panic("验证码验证失败")
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		p.MsgBack("验证码验证失败2", 0)
+		panic("验证码验证失败")
+	}
+	var a TenXunRequest
+	json.Unmarshal(body, &a)
+	return util.StrToInt(a.Response)
 }
 
 //验证用户名是否存在
