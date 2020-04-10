@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/dgrijalva/jwt-go"
-	"room/util"
 	"strconv"
 	"time"
 )
@@ -89,7 +88,7 @@ func GetTokenUserId(tokenString string) (id int){
 			return []byte(KEY), nil
 		})
 	if claims, ok := token.Claims.(*MyCustomClaims); ok && token.Valid {
-		return util.StrToInt(claims.User.Id)
+		return StrToInt(claims.User.Id)
 	}
 	return 0
 }
