@@ -34,4 +34,17 @@ func init() {
 	beego.Router("/user/books/renew/time", &users.UserController{},"post:ChangeRenewTime")
 	//删除图书
 	beego.Router("/user/books/del", &users.UserController{},"post:DelBook")
+
+    //书源首页
+	beego.Router("/book/source", &controllers.BookSourceController{},"get:BookSource")
+    //分类链接,名
+	beego.Router("/book/source/types", &controllers.BookSourceController{},"get:BookTypes")
+    //分类列表
+	beego.Router("/book/source/type", &controllers.BookSourceController{},"get:BookType")
+    //排行列表
+	beego.Router("/book/source/board/list", &controllers.BookSourceController{},"get:LeaderBoard")
+    //排行链接,名
+	beego.Router("/book/source/board", &controllers.BookSourceController{},"get:Leader")
+    //获取完本数据列表
+	beego.Router("/book/source/book/end", &controllers.BookSourceController{},"get:BookEnd")
 }

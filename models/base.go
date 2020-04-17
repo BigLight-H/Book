@@ -24,6 +24,12 @@ func Init() {
 		new(Users),
 		new(Bookshelf),
 		new(Synopsis),
+		new(Source),
+		new(Type),
+		new(Types),
+		new(Leader),
+		new(Leaderboard),
+		new(Completed),
 	)
 }
 
