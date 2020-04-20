@@ -3,7 +3,6 @@ package controllers
 import (
 	"fiction_web/models"
 	"fiction_web/service"
-	"github.com/davecgh/go-spew/spew"
 )
 
 type BookSourceController struct {
@@ -15,8 +14,8 @@ func (p *BookSourceController) BookSource() {
 	source := models.Source{Id:1}
 	p.o.Read(&source)
 	lists := service.HubSource(source)
-	spew.Dump(lists)
-	p.Ctx.WriteString("hahha")
+	p.Data["json"] = lists
+	p.ServeJSON()
 }
 
 //获取分类页分类标题数据
